@@ -1,0 +1,116 @@
+package com.example.stackoverflowsearch.app;
+
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+
+import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.RuntimeExceptionDao;
+import com.j256.ormlite.support.ConnectionSource;
+import com.j256.ormlite.table.TableUtils;
+
+import java.sql.SQLException;
+
+/**
+ * Created by mohit on 6/9/14.
+ */
+public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
+
+    private static final String DATABASE_NAME = "stackQuerySearch.db";
+
+    private static final int DATABASE_VERSION = 1;
+
+    private Dao<QueryData,Integer> queryDao = null;
+    private Dao<QuestionData,Integer> questionDao = null;
+    private Dao<AnswerData,Integer> answerDao = null;
+
+    private RuntimeExceptionDao<QueryData,Integer> queryRuntimeDao = null;
+    private RuntimeExceptionDao<QuestionData,Integer> questionRuntimeDao = null;
+    private RuntimeExceptionDao<AnswerData,Integer> answerRuntimeDao = null;
+
+    public DatabaseHelper(Context context) {
+        super(context,DATABASE_NAME,null,DATABASE_VERSION,R.raw.ormlite_config);
+    }
+    @Override
+    public void onCreate(SQLiteDatabase sqLiteDatabase, ConnectionSource connectionSource) {
+        try {
+            TableUtils.createTable(connectionSource,QueryData.class);
+            TableUtils.createTable(connectionSource,QuestionData.class);
+            TableUtils.createTable(connectionSource,AnswerData.class);
+
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, ConnectionSource connectionSource, int i, int i2) {
+        try {
+            TableUtils.dropTable(connectionSource,QueryData.class,true);
+            TableUtils.dropTable(connectionSource,QuestionData.class,true);
+            TableUtils.dropTable(connectionSource,AnswerData.class,true);
+
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    @Override
+    public void onOpen(SQLiteDatabase sqLiteDatabase) {
+        super.onOpen(sqLiteDatabase);
+        if(!sqLiteDatabase.isReadOnly()) {
+            sqLiteDatabase.execSQL("PRAGMA foreign_keys=ON;");
+        }
+    }
+
+    public Dao<QueryData,Integer> getQueryDao() throws SQLException{
+        if (queryDao==null) {
+            queryDao = getDao(QueryData.class);
+        }
+        return queryDao;
+    }
+
+    public Dao<QuestionData,Integer> getQuestionDao() throws SQLException{
+        if(questionDao==null) {
+            questionDao=getDao(QuestionData.class);
+        }
+        return questionDao;
+    }
+
+    public Dao<AnswerData,Integer> getAnswerDao() throws SQLException {
+        if(answerDao==null) {
+            answerDao=getDao(AnswerData.class);
+        }
+        return answerDao;
+    }
+
+    public RuntimeExceptionDao<QueryData,Integer> getQueryRuntimeDao (){
+        if(queryRuntimeDao==null) {
+            queryRuntimeDao = getRuntimeExceptionDao(QueryData.class);
+        }
+        return queryRuntimeDao;
+    }
+
+    public RuntimeExceptionDao<QuestionData,Integer> getQuestionRuntimeDao() {
+        if(questionRuntimeDao == null ) {
+            questionRuntimeDao = getRuntimeExceptionDao(QuestionData.class);
+        }
+        return questionRuntimeDao;
+    }
+
+    public RuntimeExceptionDao<AnswerData,Integer> getAnswerRuntimeDao() {
+        if(answerRuntimeDao == null) {
+            answerRuntimeDao = getRuntimeExceptionDao(AnswerData.class);
+        }
+        return answerRuntimeDao;
+    }
+
+    public void close() {
+        super.close();
+        queryDao=null;
+        questionDao=null;
+        queryRuntimeDao=null;
+        questionRuntimeDao=null;
+    }
+}

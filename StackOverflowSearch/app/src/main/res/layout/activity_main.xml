@@ -1,0 +1,42 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context="com.example.stackoverflowsearch.app.MainActivity">
+
+    <EditText
+        android:layout_width="230dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/queryEditText"
+        android:hint="@string/queryEditText"
+
+        />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/searchButton"
+        android:text="@string/searchButton"
+        android:layout_toRightOf="@+id/queryEditText"/>
+    <ListView
+        android:id="@+id/questionListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/searchButton"></ListView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/llProgressBar"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:background="#55000000">
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+    >
+    </ProgressBar>
+    </LinearLayout>
+
+</RelativeLayout>
